@@ -755,12 +755,12 @@ function isFragmentTemplate(
 ): boolean {
   if (tag !== 'template') return false
 
-  for (const prop of props) {
+  for (let i = 0; i < props.length; i++) {
     if (
-      prop.type === NodeTypes.DIRECTIVE &&
-      specialTemplateDir.has((prop as DirectiveNode).name)
+      props[i].type === NodeTypes.DIRECTIVE &&
+      specialTemplateDir.has((props[i] as DirectiveNode).name)
     ) {
-      if (prop.name === 'slot' && parent && !isComponent(parent)) {
+      if (props[i].name === 'slot' && parent && !isComponent(parent)) {
         emitError(ErrorCodes.X_TEMPLATE_NOT_ROOT, loc.start.offset)
       }
       return true
