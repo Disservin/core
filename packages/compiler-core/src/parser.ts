@@ -753,19 +753,20 @@ function isFragmentTemplate(
   { tag, props, loc }: ElementNode,
   parent: ElementNode,
 ): boolean {
-  if (tag === 'template') {
-    for (let i = 0; i < props.length; i++) {
-      if (
-        props[i].type === NodeTypes.DIRECTIVE &&
-        specialTemplateDir.has((props[i] as DirectiveNode).name)
-      ) {
-        if (props[i].name === 'slot' && parent && !isComponent(parent)) {
-          emitError(ErrorCodes.X_TEMPLATE_NOT_ROOT, loc.start.offset)
-        }
-        return true
+  if (tag !== 'template') return false
+
+  for (const prop of props) {
+    if (
+      prop.type === NodeTypes.DIRECTIVE &&
+      specialTemplateDir.has((prop as DirectiveNode).name)
+    ) {
+      if (prop.name === 'slot' && parent && !isComponent(parent)) {
+        emitError(ErrorCodes.X_TEMPLATE_NOT_ROOT, loc.start.offset)
       }
+      return true
     }
   }
+
   return false
 }
 
